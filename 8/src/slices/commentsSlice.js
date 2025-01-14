@@ -14,31 +14,18 @@ const commentsSlice = createSlice({
     addComment: commentsAdapter.addOne,
   },
   // BEGIN (write your solution here)
-  extraReducers: (builder) => {
-    builder
-      .addCase(usersActions.removeUser, (state, { payload }) => {
-        const userId = payload.id;
-        const allComments = Object.values(state.entities);
-        const commentsToRemove = allComments.filter(
-          (comment) => comment.authorId === userId
-        );
-        commentsAdapter.removeMany(
-          state,
-          commentsToRemove.map((comment) => comment.id)
-        );
-      })
-      .addCase(postsActions.removePost, (state, { payload }) => {
-        const postId = payload.id;
-        const allComments = Object.values(state.entities);
-        const commentsToRemove = allComments.filter(
-          (comment) => comment.postId === postId
-        );
-        commentsAdapter.removeMany(
-          state,
-          commentsToRemove.map((comment) => comment.id)
-        );
-      });
-  },
+  extraReducers: (builder) => { // Дополнительные редьюсеры
+    builder.addCase(postsActions.removePost, (state, action) => {
+      const post = action.payload;
+      const restEntities = Object.values(state.entities).filter((e) => !post.comments.includes(e.id));
+      commentsAdapter.setAll(state, restEntities);
+    })
+    builder.addCase(usersActions.removeUser, (state, action) => {
+      const id = action.payload;
+      const restEntities = Object.values(state.entities).filter((e) => e.author !== id);
+      commentsAdapter.setAll(state, restEntities);
+    })
+  }
   // END
 });
 
