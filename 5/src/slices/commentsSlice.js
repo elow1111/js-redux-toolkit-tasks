@@ -1,17 +1,18 @@
-// BEGIN (write your solution here)
 import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
-  comments: [],
+    comments: [],
 };
+
 const commentsSlice = createSlice({
   name: "comments",
   initialState,
   reducers: {
-    setComments: (state, action) => {
-      state.comments = action.payload;
+    setComments: (state, { payload: { comments } }) => {
+      state.comments = comments;
     },
   },
 });
-export const { setComments } = commentsSlice.actions;
+
+export const { actions } = commentsSlice;
 export default commentsSlice.reducer;
-// END
