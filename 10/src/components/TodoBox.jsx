@@ -1,42 +1,37 @@
 import React from 'react';
 import Spinner from './Spinner.jsx';
 import TodoForm from './TodoForm.jsx';
-// BEGIN (write your solution here)
-import { useGetTasksQuery, useAddTaskMutation, useDeleteTaskMutation } from '../services/tasksApi.js';
-// END
+import { useGetTasksQuery, useAddTaskMutation, useRemoveTaskMutation } from '../services/tasksApi.js';
 
 const TodoBox = () => {
   // BEGIN (write your solution here)
-  const { data: tasks = [], isLoading } = useGetTasksQuery();
-  const [addTask] = useAddTaskMutation();
-  const [deleteTask] = useDeleteTaskMutation();
+  const { data: tasks, error, isLoading } = useGetTasksQuery();
+  const [deleteTask, { error: deleteTaskError, isLoading: isDeletingTask }] = useRemoveTaskMutation();
+  const [addTask, { error: addTaskError, isLoading: isAddingTask }] = useAddTaskMutation();
   // END
 
-  const handleDeleteTask = async (event, id) => {
+  const handleDeleteTask = (event, id) => {
     event.preventDefault();
-    // BEGIN (write your solution here)
-    await deleteTask(id);
-    // END
+    deleteTask(id);
   };
 
-  const handleSubmitForm = async (event, newTaskText) => {
+  const handleSubmitForm = (event, newTaskText) => {
     event.preventDefault();
-    // BEGIN (write your solution here)
-    await addTask({ text: newTaskText });
-    // END
+    addTask({ text: newTaskText });  // Добавляем задачу как объект с полем text
   };
 
   const renderTodo = () => (
-    <TodoForm
-      submitHandler={handleSubmitForm}
-    />
+    <TodoForm submitHandler={handleSubmitForm} />
   );
 
-  // BEGIN (write your solution here)
+  // Обрабатываем загрузку данных и ошибки
   if (isLoading) {
     return <Spinner />;
   }
-  // END
+
+  if (error) {
+    return <div>Error loading tasks.</div>;
+  }
 
   return (
     <div>
@@ -44,7 +39,7 @@ const TodoBox = () => {
         {renderTodo()}
       </div>
       <div>
-        {tasks.map((task) => (
+        {tasks && tasks.map((task) => (
           <div key={task.id} className="row">
             <div className="col-1">
               {task.id}
