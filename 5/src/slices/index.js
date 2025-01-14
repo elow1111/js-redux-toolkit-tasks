@@ -10,7 +10,7 @@ export default configureStore({
     usersReducer,
     postsReducer,
     // BEGIN (write your solution here)
-    comments: commentsReducer,
+    commentsReducer,
     // END
   },
 });
