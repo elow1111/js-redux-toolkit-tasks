@@ -10,13 +10,9 @@ const NewTaskForm = () => {
   const dispatch = useDispatch();
 
   const handleAddTask = (e) => {
-    // BEGIN (write your solution here)
-    e.preventDefault();
-    if (name.trim()) {
-      dispatch(addTask(name));
-      setName(''); // очищаем поле ввода после добавления задачи
-    }
-    // END
+    e.preventDefault(); 
+    dispatch(addTask({ name }));
+    setName('');
   };
 
   const onChange = (e) => setName(e.target.value);
