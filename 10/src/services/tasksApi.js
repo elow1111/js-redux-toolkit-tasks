@@ -1,29 +1,37 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // BEGIN (write your solution here)
-const tasksApi = createApi({
-    reducerPath: 'tasksApi',
+export const tasksApi = createApi({
+    reducerPath: 'tasks',
     baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+    tagTypes: ['Task'], 
     endpoints: (builder) => ({
-      getTasks: builder.query({
-        query: () => '/tasks',
-      }),
-      addTask: builder.mutation({
-        query: (newTask) => ({
-          url: '/tasks',
-          method: 'POST',
-          body: newTask,
+        getTasks: builder.query({
+            query: () => '/tasks',
+            providesTags: ['Task'],  
         }),
-      }),
-      deleteTask: builder.mutation({
-        query: (id) => ({
-          url: `/tasks/${id}`,
-          method: 'DELETE',
+        addTask: builder.mutation({
+            query: (task) => ({
+                url: '/tasks',
+                method: 'POST',
+                body: task,
+            }),
+            invalidatesTags: ['Task'], 
         }),
-      }),
-    }),
-  });
-  
-  export const { useGetTasksQuery, useAddTaskMutation, useDeleteTaskMutation } = tasksApi;
-  export default tasksApi;
+        removeTask: builder.mutation({
+            query: (id) => ({
+                url: `/tasks/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Task'],  
+        })
+    })
+});
+
+export const {
+    useGetTasksQuery,
+    useAddTaskMutation,
+    useRemoveTaskMutation
+} = tasksApi;
+
 // END
