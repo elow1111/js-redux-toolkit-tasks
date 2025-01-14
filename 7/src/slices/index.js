@@ -4,12 +4,11 @@ import commentsReducer from "./commentsSlice.js";
 import usersReducer from "./usersSlice.js";
 
 // BEGIN (write your solution here)
-const store = configureStore({
+export default configureStore({
     reducer: {
+      users: usersReducer,
       posts: postsReducer,
       comments: commentsReducer,
-      users: usersReducer,
     },
   });
-export default store;
 // END
